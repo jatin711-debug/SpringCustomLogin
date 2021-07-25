@@ -1,5 +1,6 @@
 package com.sheridan.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -8,6 +9,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private LoginAccessDenied denyhandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -22,7 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .invalidateHttpSession(true)
                                     .clearAuthentication(true)
                                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                            .logoutSuccessUrl("/login?logout").permitAll();
+                                            .logoutSuccessUrl("/login?logout").permitAll().and().exceptionHandling()
+                                                .accessDeniedHandler(denyhandler);
 
     }
 
@@ -32,5 +36,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .passwordEncoder(NoOpPasswordEncoder.getInstance())
             .withUser("frank@frank.com").password("1234").roles("USER")
                 .and().withUser("guest@guest.com").password("password").roles("GUEST");
-}
+    }
 }
