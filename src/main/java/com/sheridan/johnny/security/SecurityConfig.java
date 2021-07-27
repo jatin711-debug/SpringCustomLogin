@@ -1,4 +1,4 @@
-package com.sheridan.security;
+package com.sheridan.johnny.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
